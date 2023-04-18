@@ -61,12 +61,15 @@ END {
         done &
         ss_pid=$!
 
-        # Run a benchmark to test the performance
-        echo "wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php"
-        test_output=$(wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php)
-        test_output_json=$(echo "$test_output"| awk '/^{/,0{if($0 !~ /^[-]+$/){print}}' | jq .)
-        echo "$test_output" | tee "${LOGDIR}/buffertest-rmem_max-${rmem_max}-wmem_max-${wmem_max}.log"
-        echo "$test_output_json" > "${LOGDIR}/buffertest-rmem_max-${rmem_max}-wmem_max-${wmem_max}.json"
+        # Add a loop to run the wrk test 3 times
+        for i in {1..3}; do
+            # Run a benchmark to test the performance
+            echo "wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php"
+            test_output=$(wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php)
+            test_output_json=$(echo "$test_output"| awk '/^{/,0{if($0 !~ /^[-]+$/){print}}' | jq .)
+            echo "$test_output" | tee "${LOGDIR}/buffertest-rmem_max-${rmem_max}-wmem_max-${wmem_max}-${i}.log"
+            echo "$test_output_json" > "${LOGDIR}/buffertest-rmem_max-${rmem_max}-wmem_max-${wmem_max}-${i}.json"
+        done
 
         # Wait for a few seconds to ensure ss has time to collect data
         sleep 3
