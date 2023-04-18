@@ -23,8 +23,13 @@ cd centminmod-buffertests
 time ./buffertest.sh
 ```
 
+The `buffertest.sh` by default logs `ss` stats for port `80` and PHP-FPM port `9000` according to `ss -e -t -i -p "( sport = :80 or sport = :9000 )"`. If you plan to test with HTTPS port `443`, adjust accordingly.
+
+Output for `testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.log`
+
+
 ```
-cat buffertest-rmem_max-16777216-wmem_max-16777216.log
+cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.log
 Running 3s test @ http://localhost/index.php
   2 threads and 100 connections
   Thread Stats   Avg     Stdev       Max       Min   +/- Stdev
@@ -74,7 +79,7 @@ JSON Output
 JSON output only
 
 ```
-cat buffertest-rmem_max-16777216-wmem_max-16777216.json 
+cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.json 
 {
   "requests": 97397,
   "duration_in_microseconds": 3006606.00,
@@ -105,6 +110,47 @@ cat buffertest-rmem_max-16777216-wmem_max-16777216.json
   ]
 }
 ```
+
+# Generate table
+
+The `buffertest.sh` run will generate wrk JSON log files:
+
+```
+ls -1rt testlogs/*.json
+testlogs/buffertest-rmem_max-262144-wmem_max-262144.json
+testlogs/buffertest-rmem_max-524288-wmem_max-524288.json
+testlogs/buffertest-rmem_max-1048576-wmem_max-1048576.json
+testlogs/buffertest-rmem_max-2097152-wmem_max-2097152.json
+testlogs/buffertest-rmem_max-4194304-wmem_max-4194304.json
+testlogs/buffertest-rmem_max-8388608-wmem_max-8388608.json
+testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.json
+```
+
+The `generate-table.sh` script will aggregrate all the work JSON log files into a markdown format table:
+
+```
+./generate-table.sh
+
+| rmem_max | wmem_max | requests | duration_in_microseconds | bytes | requests_per_sec | bytes_transfer_per_sec | 50% latency | 75% latency | 90% latency | 99% latency | 99.999% latency |
+|----------|----------|----------|-------------------------|-------|-----------------|-----------------------|-------------|-------------|-------------|-------------|-----------------|
+| 262144 | 262144 | 39253 | 3001496.00 | 9185202 | 13077.81 | 3060207.98 | 8088 | 8472 | 8824 | 9732 | 15000 |
+| 524288 | 524288 | 99427 | 3100751.00 | 23265918 | 32065.46 | 7503317.10 | 2962 | 3759 | 4312 | 7770 | 22129 |
+| 1048576 | 1048576 | 97842 | 3010570.00 | 22895028 | 32499.49 | 7604881.47 | 2849 | 3605 | 4296 | 9641 | 19495 |
+| 2097152 | 2097152 | 100218 | 3104021.00 | 23451012 | 32286.51 | 7555042.96 | 2897 | 3725 | 4332 | 10921 | 32713 |
+| 4194304 | 4194304 | 94322 | 3044799.00 | 22071348 | 30978.07 | 7248868.64 | 2826 | 3592 | 4837 | 45796 | 73840 |
+| 8388608 | 8388608 | 97785 | 3001677.00 | 22881690 | 32576.79 | 7622968.76 | 2824 | 3598 | 4303 | 10180 | 25101 |
+| 16777216 | 16777216 | 97309 | 3004353.00 | 22770306 | 32389.34 | 7579104.72 | 2916 | 3700 | 4315 | 9228 | 20413 |
+```
+
+| rmem_max | wmem_max | requests | duration_in_microseconds | bytes | requests_per_sec | bytes_transfer_per_sec | 50% latency | 75% latency | 90% latency | 99% latency | 99.999% latency |
+|----------|----------|----------|-------------------------|-------|-----------------|-----------------------|-------------|-------------|-------------|-------------|-----------------|
+| 262144 | 262144 | 39253 | 3001496.00 | 9185202 | 13077.81 | 3060207.98 | 8088 | 8472 | 8824 | 9732 | 15000 |
+| 524288 | 524288 | 99427 | 3100751.00 | 23265918 | 32065.46 | 7503317.10 | 2962 | 3759 | 4312 | 7770 | 22129 |
+| 1048576 | 1048576 | 97842 | 3010570.00 | 22895028 | 32499.49 | 7604881.47 | 2849 | 3605 | 4296 | 9641 | 19495 |
+| 2097152 | 2097152 | 100218 | 3104021.00 | 23451012 | 32286.51 | 7555042.96 | 2897 | 3725 | 4332 | 10921 | 32713 |
+| 4194304 | 4194304 | 94322 | 3044799.00 | 22071348 | 30978.07 | 7248868.64 | 2826 | 3592 | 4837 | 45796 | 73840 |
+| 8388608 | 8388608 | 97785 | 3001677.00 | 22881690 | 32576.79 | 7622968.76 | 2824 | 3598 | 4303 | 10180 | 25101 |
+| 16777216 | 16777216 | 97309 | 3004353.00 | 22770306 | 32389.34 | 7579104.72 | 2916 | 3700 | 4315 | 9228 | 20413 |
 
 # ss json output explained
 
@@ -140,7 +186,7 @@ cat buffertest-rmem_max-16777216-wmem_max-16777216.json
 * `sndwnd`: the send window size of the connection
 
 ```
-cat ss_output-rmem_max-16777216-wmem_max-16777216.log | jq -c '.[]' | tail -4 | jq -r
+cat testlogs/ss_output-rmem_max-16777216-wmem_max-16777216.log | jq -c '.[]' | tail -4 | jq -r
 
 {
   "state": "FIN-WAIT-1",
