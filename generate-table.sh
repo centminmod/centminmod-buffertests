@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Specify the number of runs for calculating the average
-num_runs=5
+num_runs=7
 
 # Get the list of JSON files
 files=$(ls -1rt testlogs/*.json)
