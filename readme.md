@@ -29,7 +29,7 @@ Output for `testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.log`
 
 
 ```
-cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.log
+cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216-1.log
 Running 3s test @ http://localhost/index.php
   2 threads and 100 connections
   Thread Stats   Avg     Stdev       Max       Min   +/- Stdev
@@ -79,7 +79,7 @@ JSON Output
 JSON output only
 
 ```
-cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.json 
+cat testlogs/buffertest-rmem_max-16777216-wmem_max-16777216-1.json 
 {
   "requests": 97397,
   "duration_in_microseconds": 3006606.00,
@@ -117,13 +117,27 @@ The `buffertest.sh` run will generate wrk JSON log files:
 
 ```
 ls -1rt testlogs/*.json
-testlogs/buffertest-rmem_max-262144-wmem_max-262144.json
-testlogs/buffertest-rmem_max-524288-wmem_max-524288.json
-testlogs/buffertest-rmem_max-1048576-wmem_max-1048576.json
-testlogs/buffertest-rmem_max-2097152-wmem_max-2097152.json
-testlogs/buffertest-rmem_max-4194304-wmem_max-4194304.json
-testlogs/buffertest-rmem_max-8388608-wmem_max-8388608.json
-testlogs/buffertest-rmem_max-16777216-wmem_max-16777216.json
+testlogs/buffertest-rmem_max-262144-wmem_max-262144-1.json
+testlogs/buffertest-rmem_max-262144-wmem_max-262144-2.json
+testlogs/buffertest-rmem_max-262144-wmem_max-262144-3.json
+testlogs/buffertest-rmem_max-524288-wmem_max-524288-1.json
+testlogs/buffertest-rmem_max-524288-wmem_max-524288-2.json
+testlogs/buffertest-rmem_max-524288-wmem_max-524288-3.json
+testlogs/buffertest-rmem_max-1048576-wmem_max-1048576-1.json
+testlogs/buffertest-rmem_max-1048576-wmem_max-1048576-2.json
+testlogs/buffertest-rmem_max-1048576-wmem_max-1048576-3.json
+testlogs/buffertest-rmem_max-2097152-wmem_max-2097152-1.json
+testlogs/buffertest-rmem_max-2097152-wmem_max-2097152-2.json
+testlogs/buffertest-rmem_max-2097152-wmem_max-2097152-3.json
+testlogs/buffertest-rmem_max-4194304-wmem_max-4194304-1.json
+testlogs/buffertest-rmem_max-4194304-wmem_max-4194304-2.json
+testlogs/buffertest-rmem_max-4194304-wmem_max-4194304-3.json
+testlogs/buffertest-rmem_max-8388608-wmem_max-8388608-1.json
+testlogs/buffertest-rmem_max-8388608-wmem_max-8388608-2.json
+testlogs/buffertest-rmem_max-8388608-wmem_max-8388608-3.json
+testlogs/buffertest-rmem_max-16777216-wmem_max-16777216-1.json
+testlogs/buffertest-rmem_max-16777216-wmem_max-16777216-2.json
+testlogs/buffertest-rmem_max-16777216-wmem_max-16777216-3.json
 ```
 
 The `generate-table.sh` script will aggregrate all the work JSON log files into a markdown format table:
