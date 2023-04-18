@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Specify the number of runs for calculating the average
-num_runs=7
+num_runs=5
 
 # Get the list of JSON files
 files=$(ls -1rt testlogs/*.json)
@@ -30,6 +30,7 @@ print_average_row() {
 }
 
 # Loop through the files and extract the values
+rm -f output.txt
 for file in $files; do
     rmem_max=$(echo $file | awk -F'[-]' '{print $3}')
     wmem_max=$(echo $file | awk -F'[-]' '{print $5}')
