@@ -1,5 +1,6 @@
 #!/bin/bash
 LOGDIR=testlogs
+num_runs=5
 mkdir -p "$LOGDIR"
 # Save the current rmem_max and wmem_max values
 current_rmem_max=$(sysctl -n net.core.rmem_max)
@@ -62,7 +63,7 @@ END {
         ss_pid=$!
 
         # Add a loop to run the wrk test 3 times
-        for i in {1..3}; do
+        for i in $(seq 1 $num_runs); do
             # Run a benchmark to test the performance
             echo "wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php"
             test_output=$(wrk -t2 -c100 -d3s --breakout -s /root/tools/wrk-cmm/scripts/json.lua http://localhost/index.php)
