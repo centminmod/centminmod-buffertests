@@ -140,7 +140,6 @@ cat buffertest-rmem_max-16777216-wmem_max-16777216.json
 * `sndwnd`: the send window size of the connection
 
 ```
-```
 cat ss_output-rmem_max-16777216-wmem_max-16777216.log | jq -c '.[]' | tail -4 | jq -r
 
 {
