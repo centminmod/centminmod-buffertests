@@ -82,3 +82,9 @@ done
 # Revert rmem_max and wmem_max to their original values
 sysctl -w net.core.rmem_max=$current_rmem_max
 sysctl -w net.core.wmem_max=$current_wmem_max
+
+# generate wrk jso markdown table
+if [ -f generate-table.sh ]; then
+    echo
+    ./generate-table.sh
+fi
